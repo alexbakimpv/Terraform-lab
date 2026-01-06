@@ -83,8 +83,8 @@ resource "google_cloudbuild_trigger" "manager_api_deploy_trigger" {
           " --project=", var.project_id,
           " --zone=", google_container_cluster.primary.location,
           "; ",
-          "kubectl -n amplify-manager rollout restart deployment/amplify-manager-api; ",
-          "kubectl -n amplify-manager rollout status deployment/amplify-manager-api --timeout=300s"
+          "kubectl -n amplify-manager set image deployment/amplify-manager-api api=${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.lab_repo.repository_id}/amplify-manager-api:latest; ",
+          "kubectl -n amplify-manager rollout status deployment/amplify-manager-api --timeout=120s"
         ])
       ]
     }
