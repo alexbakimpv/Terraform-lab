@@ -75,7 +75,7 @@ spec:
         - name: AIR_ORIGIN_HOSTNAME
           value: "${trim(google_dns_record_set.air_origin.name, ".")}"
         - name: ATTACK_CLIENT_IMAGE
-          value: "us-docker.pkg.dev/cloudrun/container/hello"
+          value: "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.lab_repo.repository_id}/attack-client:latest"
         - name: RESEND_API_KEY_SECRET_NAME
           value: "resend-key"
         - name: MANAGER_URL
