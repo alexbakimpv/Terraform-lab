@@ -10,7 +10,8 @@ locals {
     "supabase-url",
     "supabase-anon-key",
     "lab-manager-auth-token",
-    "ns1-api-key"
+    "ns1-api-key",
+    "resend-api-key"
   ]
 }
 
