@@ -77,7 +77,7 @@ spec:
         - name: ATTACK_CLIENT_IMAGE
           value: "us-docker.pkg.dev/cloudrun/container/hello"
         - name: RESEND_API_KEY_SECRET_NAME
-          value: "resend-api-key"
+          value: "resend-key"
         - name: MANAGER_URL
           value: "https://manager.lab.amplifys.us"
 
