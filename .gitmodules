@@ -1,0 +1,6 @@
+[submodule "services/amplify-air"]
+	path = services/amplify-air
+	url = https://github.com/alexbakimpv/amplifychat-1eee5cdc.git
+[submodule "services/manager"]
+	path = services/manager
+	url = https://github.com/alexbakimpv/appsec-unilab-manager.git
