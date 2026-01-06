@@ -66,6 +66,16 @@ spec:
           value: "lab-manager-auth-token"
         - name: AUTH_SECRET_SECRET_NAME
           value: "lab-manager-auth-token"
+        - name: GCP_REGION
+          value: "${var.region}"
+        - name: DNS_ZONE_NAME
+          value: "${google_dns_managed_zone.lab_zone.name}"
+        - name: DNS_ZONE_DOMAIN
+          value: "${trim(google_dns_managed_zone.lab_zone.dns_name, ".")}"
+        - name: AIR_ORIGIN_HOSTNAME
+          value: "${trim(google_dns_record_set.air_origin.name, ".")}"
+        - name: ATTACK_CLIENT_IMAGE
+          value: "us-docker.pkg.dev/cloudrun/container/hello"
 
 YAML
 

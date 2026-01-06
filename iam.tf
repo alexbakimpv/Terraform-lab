@@ -22,12 +22,13 @@ resource "google_service_account" "lab_manager_sa" {
   display_name = "Lab Manager Service Account"
 }
 
-# Grant "The Brain" power over DNS and Secrets
+# Grant "The Brain" power over DNS, Secrets, and Cloud Run
 resource "google_project_iam_member" "manager_roles" {
   for_each = toset([
     "roles/dns.admin",
     "roles/secretmanager.secretAccessor",
-    "roles/datastore.user"
+    "roles/datastore.user",  # Firestore Native mode access (this role works for both Datastore and Firestore Native)
+    "roles/run.admin"        # Create and manage Cloud Run services
   ])
   project = var.project_id
   role    = each.value
