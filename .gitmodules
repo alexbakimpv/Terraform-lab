@@ -4,3 +4,6 @@
 [submodule "services/manager"]
 	path = services/manager
 	url = https://github.com/alexbakimpv/appsec-unilab-manager.git
+[submodule "services/attack-client"]
+	path = services/attack-client
+	url = https://github.com/alexbakimpv/amplify-attack-client.git
