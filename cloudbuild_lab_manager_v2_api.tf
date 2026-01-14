@@ -68,10 +68,10 @@ resource "google_cloudbuild_trigger" "lab_manager_v2_api_deploy_trigger" {
       name = "gcr.io/cloud-builders/docker"
       args = [
         "build",
-        "-f", "services/lab-manager-v2/backend/Dockerfile",
+        "-f", "lab-manager-v2/backend/Dockerfile",
         "-t",
         "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.lab_repo.repository_id}/lab-manager-v2-api:latest",
-        "services/lab-manager-v2/backend"
+        "lab-manager-v2/backend"
       ]
     }
 
