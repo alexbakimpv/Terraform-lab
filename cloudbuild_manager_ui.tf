@@ -51,9 +51,11 @@ YAML
 }
 
 # 4) Trigger: build/push UI image from frontend/ and restart deployment
+# DISABLED: Replaced by lab-manager-v2
 resource "google_cloudbuild_trigger" "manager_ui_deploy_trigger" {
   name     = "deploy-amplify-manager-ui"
   location = var.region
+  disabled = true
 
   service_account = google_service_account.manager_ui_build_sa.id
 

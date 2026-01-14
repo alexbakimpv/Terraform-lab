@@ -37,9 +37,11 @@ YAML
   depends_on = [google_container_cluster.primary]
 }
 
+# DISABLED: Replaced by lab-manager-v2
 resource "google_cloudbuild_trigger" "manager_api_deploy_trigger" {
   name     = "deploy-amplify-manager-api"
   location = var.region
+  disabled = true
 
   service_account = google_service_account.manager_api_build_sa.id
 
