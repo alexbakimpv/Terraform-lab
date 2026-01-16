@@ -22,13 +22,14 @@ resource "google_service_account" "lab_manager_sa" {
   display_name = "Lab Manager Service Account"
 }
 
-# Grant "The Brain" power over DNS, Secrets, and Cloud Run
+# Grant "The Brain" power over DNS, Secrets, Cloud Run, and Artifact Registry
 resource "google_project_iam_member" "manager_roles" {
   for_each = toset([
     "roles/dns.admin",
     "roles/secretmanager.secretAccessor",
     "roles/datastore.user",  # Firestore Native mode access (this role works for both Datastore and Firestore Native)
-    "roles/run.admin"        # Create and manage Cloud Run services
+    "roles/run.admin",       # Create and manage Cloud Run services
+    "roles/artifactregistry.reader"  # Pull images when creating Cloud Run services
   ])
   project = var.project_id
   role    = each.value
@@ -56,4 +57,21 @@ resource "google_service_account_iam_member" "lab_manager_wi_amplify_manager" {
 resource "google_service_account" "attack_client_sa" {
   account_id   = "sa-attack-client"
   display_name = "Attack Client Service Account"
+}
+
+# Grant Attack Client access to pull images from Artifact Registry
+resource "google_project_iam_member" "attack_client_roles" {
+  for_each = toset([
+    "roles/artifactregistry.reader"  # Pull attack-client image
+  ])
+  project = var.project_id
+  role    = each.value
+  member  = "serviceAccount:${google_service_account.attack_client_sa.email}"
+}
+
+# Allow Lab Manager to "act as" Attack Client SA when creating Cloud Run services
+resource "google_service_account_iam_member" "lab_manager_can_act_as_attack_client" {
+  service_account_id = google_service_account.attack_client_sa.name
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${google_service_account.lab_manager_sa.email}"
 }

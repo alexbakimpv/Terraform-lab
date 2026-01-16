@@ -56,6 +56,9 @@ spec:
     - dns01:
         cloudDNS:
           project: ${var.project_id}
+    - http01:
+        ingress:
+          class: gce
 YAML
 }
 

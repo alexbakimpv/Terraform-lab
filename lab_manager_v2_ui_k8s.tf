@@ -1,9 +1,7 @@
-# Static IP for Manager UI Ingress
-resource "google_compute_global_address" "manager_ui_ingress_ip" {
-  name = "manager-ui-ingress-ip"
+resource "google_compute_global_address" "lab_manager_v2_ui_ingress_ip" {
+  name = "lab-manager-v2-ui-ingress-ip"
 }
 
-# Namespace (modular)
 resource "kubectl_manifest" "ns_amplify_manager" {
   yaml_body = <<YAML
 apiVersion: v1
@@ -13,66 +11,65 @@ metadata:
 YAML
 }
 
-# Deployment (THIS is where step #2 goes: imagePullPolicy: Always)
-resource "kubectl_manifest" "manager_ui_deploy" {
+resource "kubectl_manifest" "lab_manager_v2_ui_deploy" {
   yaml_body = <<YAML
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: amplify-manager-ui
+  name: lab-manager-v2-ui
   namespace: amplify-manager
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: amplify-manager-ui
+      app: lab-manager-v2-ui
   template:
     metadata:
       labels:
-        app: amplify-manager-ui
+        app: lab-manager-v2-ui
     spec:
       containers:
       - name: ui
-        image: "us-east1-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.lab_repo.repository_id}/amplify-manager-ui:latest"
+        image: "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.lab_repo.repository_id}/lab-manager-v2-ui:latest"
         imagePullPolicy: Always
         ports:
-        - containerPort: 8080
+        - containerPort: 80
 YAML
 
   wait_for_rollout = false
   depends_on       = [kubectl_manifest.ns_amplify_manager]
 }
 
-resource "kubectl_manifest" "manager_ui_svc" {
+resource "kubectl_manifest" "lab_manager_v2_ui_svc" {
   yaml_body = <<YAML
 apiVersion: v1
 kind: Service
 metadata:
-  name: amplify-manager-ui-svc
+  name: lab-manager-v2-ui-svc
   namespace: amplify-manager
   annotations:
     cloud.google.com/neg: '{"ingress": true}'
 spec:
   type: NodePort
   selector:
-    app: amplify-manager-ui
+    app: lab-manager-v2-ui
   ports:
   - port: 80
-    targetPort: 8080
+    targetPort: 80
 YAML
 
-  depends_on = [kubectl_manifest.manager_ui_deploy]
+  depends_on = [kubectl_manifest.lab_manager_v2_ui_deploy]
 }
 
-resource "kubectl_manifest" "manager_ui_ingress" {
+resource "kubectl_manifest" "lab_manager_v2_ui_ingress" {
   yaml_body  = <<YAML
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: amplify-manager-ui-ing
+  name: lab-manager-v2-ui-ing
   namespace: amplify-manager
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: "${google_compute_global_address.manager_ui_ingress_ip.name}"
+    kubernetes.io/ingress.global-static-ip-name: "${google_compute_global_address.lab_manager_v2_ui_ingress_ip.name}"
 spec:
   tls:
   - secretName: lab-wildcard-tls
@@ -86,9 +83,9 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: amplify-manager-ui-svc
+            name: lab-manager-v2-ui-svc
             port:
               number: 80
 YAML
-  depends_on = [kubectl_manifest.manager_ui_svc]
+  depends_on = [kubectl_manifest.lab_manager_v2_ui_svc]
 }

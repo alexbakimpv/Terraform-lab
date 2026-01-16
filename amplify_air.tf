@@ -93,6 +93,7 @@ spec:
     hosts:
     - air.lab.amplifys.us
     - air-origin.lab.amplifys.us
+    - "*.air.lab.amplifys.us"
   # ----------------------------------------------
   rules:
   - host: air.lab.amplifys.us
@@ -107,6 +108,17 @@ spec:
               number: 80
   # We also route the Origin domain so it uses the same cert
   - host: air-origin.lab.amplifys.us
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: amplify-air-svc
+            port:
+              number: 80
+  # Per-lab hostnames (e.g., alex-f3be.air.lab.amplifys.us)
+  - host: "*.air.lab.amplifys.us"
     http:
       paths:
       - path: /

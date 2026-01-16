@@ -35,3 +35,11 @@ terraform.rc
 
 # Ignore config files that might contain sensitive data
 *.xx
+
+# Local tooling / cache
+.cursor/
+**/node_modules/
+**/test-results/
+**/playwright-report/
+tfplan
+.DS_Store

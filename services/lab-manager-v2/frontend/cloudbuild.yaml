@@ -1,0 +1,11 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '--build-arg'
+      - 'VITE_API_BASE_URL=https://lab-manager-v2-api.lab.amplifys.us/api/v1'
+      - '-t'
+      - 'us-east1-docker.pkg.dev/appsec-unilab/amplify-lab-repo/lab-manager-v2-ui:latest'
+      - '.'
+images:
+  - 'us-east1-docker.pkg.dev/appsec-unilab/amplify-lab-repo/lab-manager-v2-ui:latest'
