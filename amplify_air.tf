@@ -37,6 +37,7 @@ spec:
       - name: air-container
         # Uses your dynamic repository variables
         image: "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.lab_repo.repository_id}/amplify-air:latest"
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
         readinessProbe:

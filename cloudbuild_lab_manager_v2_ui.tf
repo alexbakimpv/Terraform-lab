@@ -61,11 +61,11 @@ resource "google_cloudbuild_trigger" "lab_manager_v2_ui_deploy_trigger" {
       name = "gcr.io/cloud-builders/docker"
       args = [
         "build",
-        "-f", "lab-manager-v2/frontend/Dockerfile",
+        "-f", "frontend/Dockerfile",
         "--build-arg", "VITE_API_BASE_URL=https://lab-manager-v2-api.lab.amplifys.us/api/v1",
         "-t",
         "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.lab_repo.repository_id}/lab-manager-v2-ui:latest",
-        "lab-manager-v2/frontend"
+        "frontend"
       ]
     }
 

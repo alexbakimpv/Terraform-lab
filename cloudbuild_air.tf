@@ -84,6 +84,18 @@ resource "google_cloudbuild_trigger" "air_deploy_trigger" {
       name = "gcr.io/cloud-builders/docker"
       args = ["push", "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.lab_repo.repository_id}/amplify-air:latest"]
     }
+    step {
+      name       = "gcr.io/google.com/cloudsdktool/cloud-sdk"
+      entrypoint = "bash"
+      args = [
+        "-c",
+        <<-EOT
+        gcloud container clusters get-credentials amplify-lab-cluster --zone us-east1-b --project "$PROJECT_ID"
+        kubectl -n amplify-air rollout restart deployment/amplify-air
+        kubectl -n amplify-air rollout status deployment/amplify-air
+        EOT
+      ]
+    }
   }
 
   depends_on = [google_cloudbuildv2_repository.air_repo]
