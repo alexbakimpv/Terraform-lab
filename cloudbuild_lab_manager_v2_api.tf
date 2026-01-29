@@ -94,7 +94,15 @@ resource "google_cloudbuild_trigger" "lab_manager_v2_api_deploy_trigger" {
           " --project=", var.project_id,
           " --zone=", google_container_cluster.primary.location,
           "; ",
-          "kubectl -n amplify-manager set image deployment/lab-manager-v2-api api=${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.lab_repo.repository_id}/lab-manager-v2-api:latest; ",
+          "DIGEST=$(gcloud artifacts docker images list ",
+          "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.lab_repo.repository_id} ",
+          "--include-tags ",
+          "--filter='package:lab-manager-v2-api tags:latest' ",
+          "--format='value(digest)' ",
+          "--sort-by=~updateTime ",
+          "--limit=1); ",
+          "kubectl -n amplify-manager set image deployment/lab-manager-v2-api ",
+          "api=${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.lab_repo.repository_id}/lab-manager-v2-api@${DIGEST}; ",
           "kubectl -n amplify-manager rollout status deployment/lab-manager-v2-api --timeout=120s"
         ])
       ]
